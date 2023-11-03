@@ -1,4 +1,6 @@
+import sys
 import pygame
+from Board import Board
 
 
 class Game:
@@ -19,3 +21,33 @@ class Game:
                 text = self.myfont30.render(str(table[y][x].getVal()), False, (255, 255, 0))
                 self.screen.blit(text, (x*100+20, y*75+100))
         pygame.display.flip()
+
+    def run(self, board: Board):
+        board.randomizeElement()
+        while True:
+            self.draw(board.getTable())
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    match event.key:
+                        case pygame.K_UP:
+                            if board.up():
+                                board.randomizeElement()
+                        case pygame.K_DOWN:
+                            if board.down():
+                                board.randomizeElement()
+                        case pygame.K_LEFT:
+                            if board.left():
+                                board.randomizeElement()
+                        case pygame.K_RIGHT:
+                            if board.right():
+                                board.randomizeElement()
+                        case pygame.K_z:
+                            for x in range(0, 4):
+                                for y in range(0, 4):
+                                    board.board[y][x].setVal(board.prevBoard[y][x].getVal())
+                        case pygame.K_ESCAPE:
+                            pygame.quit()
+                            sys.exit()
